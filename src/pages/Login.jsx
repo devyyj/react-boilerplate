@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setAccessToken } from "../slices/authSlice";
-import { Button, Box, Typography, CircularProgress, Backdrop } from "@mui/material";
-import axios from 'axios'; // axios 임포트
+import React, {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {setAccessToken} from "../slices/authSlice";
+import {Button, Box, Typography, CircularProgress, Backdrop} from "@mui/material";
+import axios from '../api/axios.js'; // axios 임포트
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false); // 모달 오픈 상태 관리
+
+  // 카카오 로그인 URL (카카오 앱 키와 리다이렉트 URI를 설정해야 함)
+  const KAKAO_LOGIN = "http://localhost:8080/oauth2/authorization/kakao"; // 서버에서 처리하는 카카오 로그인 URI
 
   useEffect(() => {
     const handleAuth = async () => {
@@ -21,15 +24,14 @@ const Login = () => {
 
       // 로그아웃 처리
       if (logout !== null) {
-        dispatch(setAccessToken(null)); // Redux에서 액세스 토큰 초기화
-
         try {
           // 서버에서 로그아웃 요청 (refreshToken 삭제)
-          const response = await axios.get('http://localhost:8080/auth/logout', {
+          const response = await axios.delete('/auth/refresh-token', {
             withCredentials: true, // 쿠키를 포함하여 요청
           });
 
           if (response.status === 200) {
+            dispatch(setAccessToken(null)); // Redux에서 액세스 토큰 초기화
             // 로그아웃 성공 시 메인 페이지로 리다이렉트
             navigate('/');
           } else {
@@ -55,9 +57,6 @@ const Login = () => {
     handleAuth();
   }, [dispatch, navigate]);
 
-  // 카카오 로그인 URL (카카오 앱 키와 리다이렉트 URI를 설정해야 함)
-  const KAKAO_LOGIN = "http://localhost:8080/oauth2/authorization/kakao"; // 서버에서 처리하는 카카오 로그인 URI
-
   return (
     <>
       {/* 전체 화면을 덮는 Backdrop */}
@@ -79,8 +78,8 @@ const Login = () => {
             justifyContent: 'center',
           }}
         >
-          <CircularProgress size={50} />
-          <Typography variant="h6" sx={{ mt: 2 }}>
+          <CircularProgress size={50}/>
+          <Typography variant="h6" sx={{mt: 2}}>
             처리 중입니다...
           </Typography>
         </Box>
@@ -95,7 +94,7 @@ const Login = () => {
           카카오톡으로 로그인
         </Typography>
         {/* 카카오 로그인 버튼 */}
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+        <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2}}>
           <Button
             variant="contained"
             color="warning"
@@ -117,7 +116,7 @@ const Login = () => {
             color="primary"
             size="large"
             onClick={() => navigate("/")}
-            sx={{ width: 'auto' }} // 버튼 너비 자동 설정
+            sx={{width: 'auto'}} // 버튼 너비 자동 설정
           >
             메인 페이지로 이동
           </Button>

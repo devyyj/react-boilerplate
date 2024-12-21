@@ -1,8 +1,29 @@
-# React + Vite
+# 사용자 인증
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 로그인
 
-Currently, two official plugins are available:
+1. 로그인 버튼을 누른다.
+2. 인증을 정상적으로 마치고 로그인 페이지로 리다이렉트 된다.
+3. 이때, 액세스 토큰은 쿼리 파라미터로 리프레시 토큰은 쿠키로 설정된다.
+4. 로그인 페이지가 로드될 때 쿼리 파라미터에 액세스 토큰이 있으면 Redux 전역 변수로 저장하고 메인 페이지로 이동한다.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 로그아웃
+
+1. 로그아웃 버튼을 누른다.
+2. 로그아웃 처리를 끝내고 로그인 페이지로 리다이렉트 된다.
+3. 이때, 로그인 페이지의 쿼리 파라미터에 logout이 있으면 리프레시 토큰(쿠키) 삭제를 요청하는 API를 호출한다.
+   1. 리프레시 토큰은 Http Only 설정이기 때문에 클라이언트가 삭제할 수 없다.
+
+## 새로고침
+
+액세스 토큰은 메모리 변수로 관리되기 때문에 웹 페이지를 새로고침하면 초기화 된다.
+
+새로고침을 해도 인증상태를 유지해야 하므로 애플리케이션이 시작될 때 액세스 토큰 재발급 API를 호출한다.
+
+리프레시 토큰이 없는 경우는 아무런 처리를 하지 않으며, 만료된 경우에는 토큰을 삭제한다.
+
+## 토큰 만료
+
+백엔드 API를 호출했으나 토큰이 만료되어 401 응답을 받았을 경우에는 액세스 토큰 재발급 API를 호출하여 재발급 받는다. (Axios 기본 설정으로 구현)
+
+이때, 쿠키에 저장된 리프레시 토큰이 사용되는데 리프레시 토큰도 만료됐을 경우에는 토큰이 삭제된다.
