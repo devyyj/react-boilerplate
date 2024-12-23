@@ -1,13 +1,15 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { Box, Typography, Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import {useSelector} from "react-redux";
+import {Box, Typography, Button} from "@mui/material";
+import {useNavigate} from "react-router-dom";
 
 const Home = () => {
   const accessToken = useSelector((state) => state.auth.accessToken);
   const navigate = useNavigate();
 
   const LOGOUT_URL = import.meta.env.VITE_API_URL + "/logout";
+
+  const handleDeleteAccount = async () => {}
 
   return (
     <Box textAlign="center" mt={5}>
@@ -24,10 +26,18 @@ const Home = () => {
             color="secondary"
             size="large"
             href={LOGOUT_URL}
-            sx={{ mb: 2 }} // 아래 버튼들과 간격 추가
+            sx={{mb: 2}} // 아래 버튼들과 간격 추가
           >
             로그아웃
           </Button>
+          <Typography
+            variant="body2"
+            color="error"
+            sx={{cursor: "pointer", mt: 2}}
+            onClick={handleDeleteAccount}
+          >
+            회원 탈퇴
+          </Typography>
         </>
       ) : (
         <>
@@ -39,7 +49,7 @@ const Home = () => {
             color="primary"
             size="large"
             onClick={() => navigate("/login")}
-            sx={{ mb: 2 }} // 아래 버튼들과 간격 추가
+            sx={{mb: 2}} // 아래 버튼들과 간격 추가
           >
             로그인 페이지로 이동
           </Button>
