@@ -17,12 +17,11 @@ const AppContent = () => {
     const fetchAccessToken = async () => {
       try {
         const response = await axios.get('/auth/reissue-token');
-        console.log(response);
         if (response.data && response.data.access_token) {
           dispatch(setAccessToken(response.data.access_token)); // Redux에 저장
         }
       } catch (error) {
-        console.error('Failed to reissue access token:', error.response?.data || error.message);
+        console.info('Browser refresh and failed to reissue access token:', error.response?.data || error.message);
       }
     };
 

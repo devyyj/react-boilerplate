@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../api/axios.js';
 
 const User = () => {
   const [data, setData] = useState(null);
@@ -8,9 +8,7 @@ const User = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('/user', {
-          withCredentials: true, // 쿠키 포함
-        });
+        const response = await axios.get('/user');
         setData(response.data);
       } catch (err) {
         setError(err.response ? err.response.data.message : 'API 호출 실패');
