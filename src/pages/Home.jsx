@@ -2,14 +2,35 @@ import React from "react";
 import {useSelector} from "react-redux";
 import {Box, Typography, Button} from "@mui/material";
 import {useNavigate} from "react-router-dom";
+import axios from "../api/axios"; // axios를 사용하여 HTTP 요청
 
 const Home = () => {
-  const accessToken = useSelector((state) => state.auth.accessToken);
+  const accessToken = useSelector((state) => state.auth.accessToken); // Redux에서 accessToken 가져오기
   const navigate = useNavigate();
 
   const LOGOUT_URL = import.meta.env.VITE_API_URL + "/logout";
 
-  const handleDeleteAccount = async () => {}
+  // 회원 탈퇴 처리 함수
+  const handleDeleteAccount = async () => {
+    try {
+      // accessToken이 있는지 확인 후 DELETE 요청 보내기
+      if (accessToken) {
+        const response = await axios.delete("/users/me");
+
+        // 탈퇴가 성공적으로 처리되었을 때
+        if (response.status === 200) {
+          console.log("회원 탈퇴가 완료되었습니다.");
+          // 성공 시 로그아웃 또는 리다이렉트
+          navigate("/login"); // 예: 로그인 페이지로 이동
+        }
+      } else {
+        console.error("사용자 인증이 필요합니다.");
+      }
+    } catch (error) {
+      console.error("회원 탈퇴 실패:", error);
+      // 실패 시 사용자에게 에러 메시지 등을 표시할 수 있음
+    }
+  };
 
   return (
     <Box textAlign="center" mt={5}>
@@ -34,7 +55,7 @@ const Home = () => {
             variant="body2"
             color="error"
             sx={{cursor: "pointer", mt: 2}}
-            onClick={handleDeleteAccount}
+            onClick={handleDeleteAccount} // 회원 탈퇴 버튼 클릭 시 함수 호출
           >
             회원 탈퇴
           </Typography>
