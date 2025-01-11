@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, {useCallback, useState} from 'react';
+import {useSelector} from 'react-redux';
 import {
   AppBar,
   Box,
@@ -15,11 +15,9 @@ import {
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import PersonIcon from '@mui/icons-material/Person';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import { useNavigate } from 'react-router-dom';
-import { logout } from '../slices/authSlice';
+import {useNavigate} from 'react-router-dom';
 
 const Navbar = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const accessToken = useSelector((state) => state.auth.accessToken);
   const LOGOUT_URL = import.meta.env.VITE_API_URL + "/logout";
@@ -33,7 +31,6 @@ const Navbar = () => {
   );
 
   const handleLogout = () => {
-    dispatch(logout());
     toggleDrawer(false);
     window.location.href = LOGOUT_URL
   };
@@ -52,7 +49,7 @@ const Navbar = () => {
         {accessToken ? (
           <>
             <ListItem disablePadding>
-              <ListItemButton onClick={() => navigate('/profile')}>
+              <ListItemButton onClick={() => navigate('/myinfo')}>
                 <PersonIcon sx={{ mr: 2 }} />
                 <ListItemText primary="내 정보" />
               </ListItemButton>

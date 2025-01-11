@@ -34,7 +34,7 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    // 액세스 or 리프레시 토큰 만료
+    // 액세스 or 리프레시 토큰 만료 응답 처리
     if (error.response
       && error.response.status === 401
       && error.response.data.message === 'JWT expired'
@@ -46,7 +46,6 @@ axiosInstance.interceptors.response.use(
         const response = await axiosInstance.get("/auth/reissue-token");
         const newAccessToken = response.data.access_token;
         store.dispatch(setAccessToken(newAccessToken));
-        // originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return axiosInstance(originalRequest);
       } else {
         // 액세스 토큰 재발급 시도 -> 리프레시 토큰 만료
@@ -56,6 +55,7 @@ axiosInstance.interceptors.response.use(
         window.location.href = "/login";
       }
     }
+    // 기본 에러 응답 처리
     if (originalRequest.url !== "/auth/reissue-token") {
       // 에러 메시지 생성
       store.dispatch(showAlert({message: error.response.data.message || '알 수 없는 오류 발생', severity: 'error'}));

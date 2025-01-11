@@ -24,20 +24,10 @@ const Login = () => {
 
       // 로그아웃 처리
       if (logout !== null) {
-        try {
-          // 서버에서 로그아웃 요청 (refreshToken 삭제)
-          const response = await axios.delete('/auth/refresh-token');
-
-          if (response.status === 200) {
-            dispatch(setAccessToken(null)); // Redux에서 액세스 토큰 초기화
-            // 로그아웃 성공 시 메인 페이지로 리다이렉트
-            navigate('/');
-          } else {
-            console.error('로그아웃 실패');
-          }
-        } catch (error) {
-          console.error('로그아웃 중 오류 발생', error);
-        }
+        // 서버에서 로그아웃 요청 (refreshToken 삭제)
+        await axios.delete('/auth/refresh-token');
+        dispatch(setAccessToken(null)); // Redux에서 액세스 토큰 초기화
+        navigate('/');
       }
 
       // 로그인 처리
@@ -88,9 +78,6 @@ const Login = () => {
         <Typography variant="h3" gutterBottom>
           로그인 페이지
         </Typography>
-        <Typography variant="body1" gutterBottom>
-          카카오톡으로 로그인
-        </Typography>
         {/* 카카오 로그인 버튼 */}
         <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2}}>
           <Button
@@ -108,15 +95,6 @@ const Login = () => {
             }}
           >
             카카오로 로그인
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            onClick={() => navigate("/")}
-            sx={{width: 'auto'}} // 버튼 너비 자동 설정
-          >
-            메인 페이지로 이동
           </Button>
         </Box>
       </Box>
